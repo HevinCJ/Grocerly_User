@@ -1,14 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.Favourites">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="favorites" />
+    <ImageView
+        android:id="@+id/imgviewnofavourites"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/baseline_favorite_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/txtviewnofavourites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:fontFamily="@font/baloo_da_2_medium"
+        android:text="@string/no_favourites"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="@+id/imgviewnofavourites"
+        app:layout_constraintStart_toStartOf="@+id/imgviewnofavourites"
+        app:layout_constraintTop_toBottomOf="@+id/imgviewnofavourites" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
