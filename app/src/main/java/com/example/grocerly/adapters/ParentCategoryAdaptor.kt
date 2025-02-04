@@ -1,5 +1,6 @@
 package com.example.grocerly.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +20,7 @@ class ParentCategoryAdaptor(): RecyclerView.Adapter<ParentCategoryAdaptor.Parent
 
                  txtviewCategoryItems.text = parentCategoryItem.categoryName
                  val childAdapter = ChildCategoryAdaptor().setChildItems(parentCategoryItem.childCategoryItems)
+                 Log.d("parentcategoryitem",parentCategoryItem.childCategoryItems[0].image.toString())
                  rcViewChildItems.adapter = childAdapter
                  rcViewChildItems.layoutManager = LinearLayoutManager(binding.root.context, RecyclerView.HORIZONTAL, false)
              }

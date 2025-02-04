@@ -6,6 +6,7 @@ plugins {
     id("kotlin-kapt")
     alias(libs.plugins.google.gms.google.services)
     id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -91,6 +92,14 @@ dependencies {
 
     //coroutines
     implementation(libs.kotlinx.coroutines.android)
+
+    //glide
+    implementation(libs.glide)
+    implementation(libs.ksp)
+
+    //coil
+    implementation(libs.coil)
+    implementation(libs.coil.network.okhttp)
 
 
 

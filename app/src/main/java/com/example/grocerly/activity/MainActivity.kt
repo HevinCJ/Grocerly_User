@@ -10,6 +10,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.example.grocerly.R
+import com.example.grocerly.ViewPagerSwipeControl
 import com.example.grocerly.adapters.FragmentStateAdaptor
 import com.example.grocerly.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
@@ -17,7 +18,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),ViewPagerSwipeControl {
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
@@ -26,7 +27,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
 
 
 
@@ -69,6 +69,10 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+    }
+
+    override fun setViewPagerEnabled(enabled: Boolean) {
+        binding.viewpgrmain.isUserInputEnabled = enabled
     }
 }
 

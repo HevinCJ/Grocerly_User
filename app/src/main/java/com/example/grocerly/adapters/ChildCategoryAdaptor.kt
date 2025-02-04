@@ -1,21 +1,23 @@
 package com.example.grocerly.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.grocerly.databinding.ChildcategoryLayoutBinding
-import com.example.grocerly.model.ChildCategoryItem
+import com.example.grocerly.model.Product
 
 class ChildCategoryAdaptor(): RecyclerView.Adapter<ChildCategoryAdaptor.ChildCategoryViewHolder>() {
 
-    private var childItemList: List<ChildCategoryItem> = emptyList()
+    private var childItemList: List<Product> = emptyList()
 
     class ChildCategoryViewHolder(private val binding: ChildcategoryLayoutBinding):ViewHolder(binding.root){
 
-        fun setItem(childCategoryItem: ChildCategoryItem){
+        fun setItem(childCategoryItem: Product){
             binding.categoryItem = childCategoryItem
             binding.executePendingBindings()
+            Log.d("categoryitemlog",childCategoryItem.itemRating.toString())
         }
     }
 
@@ -46,7 +48,7 @@ class ChildCategoryAdaptor(): RecyclerView.Adapter<ChildCategoryAdaptor.ChildCat
     }
 
 
-    fun setChildItems(childCategoryItem: List<ChildCategoryItem>): ChildCategoryAdaptor{
+    fun setChildItems(childCategoryItem: List<Product>): ChildCategoryAdaptor{
         this.childItemList = childCategoryItem
         notifyDataSetChanged()
         return this

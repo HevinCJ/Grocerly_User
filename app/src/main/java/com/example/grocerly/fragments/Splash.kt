@@ -50,9 +50,16 @@ class Splash (): Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Handler(Looper.getMainLooper()).postDelayed({
-            navigateToNextScreen()
-        },3000)
+
+        val isskipped = requireActivity().intent.getBooleanExtra("skip_splash",false)
+        if (isskipped){
+           navigateToNextScreen()
+        }else{
+            Handler(Looper.getMainLooper()).postDelayed({
+                navigateToNextScreen()
+            },3000)
+        }
+
     }
 
     private fun navigateToNextScreen() {

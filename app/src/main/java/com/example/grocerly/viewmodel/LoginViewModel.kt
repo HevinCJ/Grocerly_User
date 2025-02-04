@@ -26,7 +26,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val auth: FirebaseAuth, private val application: Application): AndroidViewModel(application) {
+class LoginViewModel @Inject constructor(private val auth: FirebaseAuth,  application: Application): AndroidViewModel(application) {
 
     private val _loginstate = MutableSharedFlow<NetworkResult<FirebaseUser>>()
     val loginstate : Flow<NetworkResult<FirebaseUser>> get() = _loginstate.asSharedFlow()

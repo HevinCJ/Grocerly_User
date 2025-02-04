@@ -17,6 +17,7 @@ import com.example.grocerly.databinding.FragmentLoginBinding
 import com.example.grocerly.utils.NetworkResult
 import com.example.grocerly.utils.RegisterValidation
 import com.example.grocerly.viewmodel.LoginViewModel
+import com.example.grocerly.viewmodel.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -27,6 +28,7 @@ class Login : Fragment() {
     private val binding get() = login!!
 
     private val loginViewModel: LoginViewModel by viewModels()
+    private val sharedViewModel:SharedViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -97,10 +99,13 @@ class Login : Fragment() {
     private fun loginToFirebase() {
         binding.apply {
           loginbtn.setOnClickListener{
-
-              val email = edttxtemail.text.toString().trim()
-              val password = edttxtpassword.text.toString().trim()
-              loginViewModel.loginUserIntoFirebase(email,password)
+              if (sharedViewModel.isNetworkAvailable(requireContext())){
+                  val email = edttxtemail.text.toString().trim()
+                  val password = edttxtpassword.text.toString().trim()
+                  loginViewModel.loginUserIntoFirebase(email,password)
+              }else{
+                  Toast.makeText(requireContext(),"Please Enable Wifi/Data Connection",Toast.LENGTH_SHORT).show()
+              }
           }
         }
     }

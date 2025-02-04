@@ -7,7 +7,7 @@
 
         <variable
             name="categoryItem"
-            type="com.example.grocerly.model.ChildCategoryItem" />
+            type="com.example.grocerly.model.Product" />
 
     </data>
 
@@ -20,7 +20,6 @@
             android:id="@+id/cardView2"
             android:layout_width="160dp"
             android:layout_height="160dp"
-            app:cardBackgroundColor="#e5e5e5"
             app:cardCornerRadius="12dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -28,9 +27,9 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:setOfferImage="@{categoryItem.image}"
                 android:contentDescription="ItemImage"
-                android:scaleType="fitCenter"
+                android:scaleType="fitXY"
+                android:setOfferImage="@{categoryItem.image}"
                 tools:src="@drawable/fruitsvegetables" />
 
 
@@ -72,8 +71,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="3dp"
-                android:text="@{String.valueOf(categoryItem.itemRating)}"
                 android:fontFamily="@font/baloo_da_2_medium"
+                android:setFormattedRating="@{categoryItem.itemRating}"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 tools:text="4.8" />
@@ -82,10 +81,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="3dp"
-                android:text="@{String.valueOf(categoryItem.totalRating)}"
                 android:fontFamily="@font/baloo_da_2_medium"
                 android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="16sp"
+                app:formattedTotalRating="@{categoryItem.totalRating}"
                 tools:text="(115)" />
 
 
@@ -93,18 +92,27 @@
 
         <TextView
             android:id="@+id/txtviewPrice"
-            android:layout_width="89dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:ellipsize="end"
+
             android:fontFamily="@font/baloo_da_2_bold"
             android:gravity="start"
-            android:text="@{String.valueOf(categoryItem.price)}"
             android:maxLength="10"
+            android:text="@{String.valueOf(categoryItem.itemPrice)}"
             android:textColor="@color/black"
-            android:textSize="22sp"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="@+id/linearLayout3"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
-            tools:text="$ 3.14" />
+            tools:text="3.14" />
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="3dp"
+            android:src="@drawable/rupee_indian"
+            app:layout_constraintBottom_toBottomOf="@+id/txtviewPrice"
+            app:layout_constraintStart_toEndOf="@+id/txtviewPrice"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
