@@ -25,8 +25,8 @@
     <fragment
         android:id="@+id/splash"
         android:name="com.example.grocerly.fragments.Splash"
-        android:label="fragment_splash_screen"
-        tools:layout="@layout/fragment_splash_screen" >
+        android:label="splash_screen"
+        tools:layout="@layout/splash_screen" >
         <action
             android:id="@+id/action_splash_to_login"
             app:destination="@id/login" />

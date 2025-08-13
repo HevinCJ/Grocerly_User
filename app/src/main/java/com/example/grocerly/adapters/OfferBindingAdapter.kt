@@ -1,19 +1,21 @@
 package com.example.grocerly.adapters
 
-import android.net.Uri
+import android.graphics.Color
 import android.util.Log
-import android.util.TypedValue
+import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
-import coil3.load
-import coil3.request.crossfade
 import com.bumptech.glide.Glide
-import java.io.File
+import java.util.Locale
+import androidx.core.graphics.toColorInt
 
 object OfferBindingAdapter {
 
-    @BindingAdapter("android:setOfferImage")
+    @BindingAdapter("setOfferImage")
     @JvmStatic
     fun setOfferImage(imageView: ImageView,savedFile: String){
 
@@ -23,13 +25,13 @@ object OfferBindingAdapter {
                 .into(imageView)
 
         }catch (e:Exception){
-
+            e.printStackTrace()
         }
 
     }
 
 
-    @BindingAdapter("android:setCategoryImage")
+    @BindingAdapter("setCategoryImage")
     @JvmStatic
     fun setCategoryImage(imageView: ImageView,url: Int){
         Glide.with(imageView.context)
@@ -37,18 +39,43 @@ object OfferBindingAdapter {
             .into(imageView)
     }
 
-        @BindingAdapter("android:setFormattedRating")
-        @JvmStatic
-        fun setFormattedRating(view:TextView,value:Double) {
-            view.text = String.format("%.1f", value)
-            Log.d("formattedrating",value.toString())
-        }
+    @JvmStatic
+    @BindingAdapter("setFormattedRating")
+    fun setFormattedRating(view: TextView, value: Double) {
+        view.text = String.format(Locale.getDefault(), "%.1f", value)
+    }
 
 
     @JvmStatic
-    @BindingAdapter("app:formattedTotalRating")
+    @BindingAdapter("formattedTotalRating")
     fun setFormattedTotalRating(view: TextView, totalRating: Int) {
-       view.text = "($totalRating)"
+       view.text = buildString {
+        append("(")
+        append(totalRating)
+        append(")")
+    }
+    }
+
+    @JvmStatic
+    @BindingAdapter("buttonTextColor")
+    fun setButtonTextColor(button: Button, colorString: String?) {
+        if (!colorString.isNullOrEmpty()) {
+            try {
+                button.setTextColor(colorString.toColorInt())
+            } catch (e: IllegalArgumentException) {
+                button.setTextColor(Color.BLACK)
+                e.printStackTrace()
+            }
+        }
+    }
+
+
+    @BindingAdapter("android:setOfferBackgroundColor")
+    @JvmStatic
+    fun setOfferBackgroundColor(view: ConstraintLayout, colorString: Int) {
+        colorString.let {
+            view.setBackgroundColor(it)
+        }
     }
 
 

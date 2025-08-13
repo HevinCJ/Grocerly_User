@@ -14,11 +14,12 @@ import com.example.grocerly.databinding.FragmentSignUpBinding
 import com.example.grocerly.model.Account
 
 import com.example.grocerly.utils.NetworkResult
+import com.example.grocerly.utils.NetworkUtils
 import com.example.grocerly.utils.RegisterFieldState
 import com.example.grocerly.utils.RegisterValidation
-import com.example.grocerly.viewmodel.SharedViewModel
 import com.example.grocerly.viewmodel.SignUpViewmodel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -27,7 +28,6 @@ class SignUp : Fragment() {
     private var  signUp:FragmentSignUpBinding?=null
     private val binding get() = signUp!!
 
-    private val sharedViewModel:SharedViewModel by viewModels()
     private val signUpViewmodel by viewModels<SignUpViewmodel>()
 
     override fun onCreateView(
@@ -56,15 +56,23 @@ class SignUp : Fragment() {
 
     private fun observeSignUpData() {
        lifecycleScope.launch {
-           signUpViewmodel.isSigned.collect{result->
+           signUpViewmodel.isSigned.collectLatest{result->
                when(result){
                    is NetworkResult.Error -> {
                        Toast.makeText(requireContext(),result.message,Toast.LENGTH_SHORT).show()
+                       binding.apply {
+                           progressbarsignin.visibility = View.INVISIBLE
+                           signupbtn.visibility = View.VISIBLE
+                       }
                    }
                    is NetworkResult.Loading -> {
-                       Toast.makeText(requireContext(),"Loading,Please wait...",Toast.LENGTH_SHORT).show()
+                       binding.apply {
+                           progressbarsignin.visibility = View.VISIBLE
+                           signupbtn.visibility = View.INVISIBLE
+                       }
                    }
                    is NetworkResult.Success -> {
+                       Toast.makeText(requireContext(),"Signed In as ${result.data?.email}",Toast.LENGTH_SHORT).show()
                        findNavController().navigate(R.id.action_signUp_to_login)
                    }
                    else ->{
@@ -78,12 +86,12 @@ class SignUp : Fragment() {
     private fun createUserWithPassword() {
         binding.apply {
          signupbtn.setOnClickListener {
-             if (sharedViewModel.isNetworkAvailable(requireContext())){
-                 val user = Account(  edttxtname.text.toString().trim(),"",edttxtemail.text.toString().trim(),"")
+             if (NetworkUtils.isNetworkAvailable(requireContext())){
+                 val user = Account("",  edttxtname.text.toString().trim(),edttxtlastname.text.toString().trim(),edttxtemail.text.toString().trim(),"")
                  val password = edttxtpassword.text.toString().trim()
                  signUpViewmodel.createUser(user,password)
              }else{
-                 Toast.makeText(requireContext(),"No Internet",Toast.LENGTH_SHORT).show()
+                 Toast.makeText(requireContext(),"Enable Wifi or Mobile data",Toast.LENGTH_SHORT).show()
              }
          }
         }
@@ -107,10 +115,17 @@ class SignUp : Fragment() {
                     }
                 }
 
-                if(state.name is RegisterValidation.Failed){
+                if(state.firstname is RegisterValidation.Failed){
                     binding.edttxtname.apply {
                         requestFocus()
-                        error = state.name.message
+                        error = state.firstname.message
+                    }
+                }
+
+                if(state.lastname is RegisterValidation.Failed){
+                    binding.edttxtlastname.apply {
+                        requestFocus()
+                        error = state.lastname.message
                     }
                 }
             }

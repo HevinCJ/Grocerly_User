@@ -1,10 +1,16 @@
 package com.example.grocerly.model
 
+import android.os.Parcelable
+
 data class OfferItem(
-    val offerText: String,
+    val offerId:String,
     val offerImage: String,
-    val offerBgColor: Int,
+    val offerBgColor: String,
     val buttonText: String,
-    val buttonBgColor: Int,
-    val buttonTxtColor:Int
-)
+    val buttonBgColor: String,
+    val buttonTxtColor:String,
+    val descriptionText: String,
+    val descriptionTextColor: String
+){
+    constructor():this("","","","","","","","")
+}

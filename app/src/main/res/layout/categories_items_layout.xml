@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginStart="12dp"
+    android:layout_marginEnd="16dp"
     >
 
     <data>
@@ -43,7 +43,7 @@
                  android:layout_height="match_parent"
 
                  android:scaleType="fitXY"
-                 android:setCategoryImage="@{categoryItem.imageUrl}"
+                 app:setCategoryImage="@{categoryItem.imageUrl}"
                  app:layout_constraintBottom_toBottomOf="parent"
                  app:layout_constraintEnd_toEndOf="parent"
                  app:layout_constraintStart_toStartOf="parent"

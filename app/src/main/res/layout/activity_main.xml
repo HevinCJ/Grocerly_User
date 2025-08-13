@@ -9,31 +9,37 @@
     tools:context=".activity.MainActivity">
 
 
-
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewpgrmain"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:defaultNavHost="true"
         app:layout_constraintBottom_toTopOf="@+id/tabLayoutmain"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        app:navGraph="@null" />
 
 
-    </androidx.viewpager2.widget.ViewPager2>
 
-    <com.google.android.material.tabs.TabLayout
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/tabLayoutmain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
+        app:menu="@menu/bottom_navigation_menu"
+        app:labelVisibilityMode="labeled"
+        app:itemActiveIndicatorStyle="@null"
+        app:itemRippleColor="@null"
+        app:itemIconTint="@color/bottomnav_icon_color"
+        app:itemTextColor="@color/bottomnav_icon_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:tabIndicator="@null"
-        app:tabMode="fixed"
         app:tabTextAppearance="@style/CustomTabText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

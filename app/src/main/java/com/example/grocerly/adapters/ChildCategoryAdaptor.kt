@@ -3,22 +3,67 @@ package com.example.grocerly.adapters
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.example.grocerly.R
 import com.example.grocerly.databinding.ChildcategoryLayoutBinding
+import com.example.grocerly.interfaces.ChildCategoryListener
+import com.example.grocerly.model.CartProduct
+import com.example.grocerly.model.FavouriteItem
 import com.example.grocerly.model.Product
+import com.example.grocerly.viewmodel.CartViewModel
+import com.example.grocerly.viewmodel.FavouriteViewModel
+import kotlinx.coroutines.flow.collect
 
-class ChildCategoryAdaptor(): RecyclerView.Adapter<ChildCategoryAdaptor.ChildCategoryViewHolder>() {
+class ChildCategoryAdaptor(private val listener: ChildCategoryListener) :
+    RecyclerView.Adapter<ChildCategoryAdaptor.ChildCategoryViewHolder>() {
 
     private var childItemList: List<Product> = emptyList()
+    private var favoritesList: List<FavouriteItem> = emptyList()
+    private var cartItems: List<CartProduct> = emptyList()
 
-    class ChildCategoryViewHolder(private val binding: ChildcategoryLayoutBinding):ViewHolder(binding.root){
 
-        fun setItem(childCategoryItem: Product){
+
+    inner class ChildCategoryViewHolder(private val binding: ChildcategoryLayoutBinding) :
+        ViewHolder(binding.root) {
+
+
+        fun setItem(childCategoryItem: Product) {
             binding.categoryItem = childCategoryItem
             binding.executePendingBindings()
-            Log.d("categoryitemlog",childCategoryItem.itemRating.toString())
+
+
+            binding.addtocartbtn.setOnClickListener {
+                listener.addProductToCart(CartProduct(childCategoryItem, 1))
+            }
+            binding.addtofavouritesbtn.setOnClickListener {
+                listener.addProductToFavourites(
+                    FavouriteItem(
+                        childCategoryItem.productId,
+                        childCategoryItem
+                    )
+                )
+            }
+
+            if (cartItems.any { it.product.productId == childCategoryItem.productId }){
+                binding.addtocartbtn.setImageDrawable(ContextCompat.getDrawable(binding.root.context,R.drawable.checkcircleadded))
+            }
+
+            if (favoritesList.any { it.product.productId == childCategoryItem.productId }) {
+                binding.addtofavouritesbtn.setColorFilter(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.red
+                    )
+                )
+            } else {
+                binding.addtofavouritesbtn.clearColorFilter()
+            }
+
         }
+
+
     }
 
     override fun onCreateViewHolder(
@@ -39,19 +84,33 @@ class ChildCategoryAdaptor(): RecyclerView.Adapter<ChildCategoryAdaptor.ChildCat
         holder: ChildCategoryViewHolder,
         position: Int
     ) {
-        val currentChildItem = childItemList[position]
-        holder.setItem(currentChildItem)
+        val product = childItemList[position]
+        holder.setItem(product)
+
+
     }
 
     override fun getItemCount(): Int {
-       return childItemList.size
+        return childItemList.size
     }
 
 
-    fun setChildItems(childCategoryItem: List<Product>): ChildCategoryAdaptor{
+    fun setChildItems(childCategoryItem: List<Product>): ChildCategoryAdaptor {
         this.childItemList = childCategoryItem
         notifyDataSetChanged()
         return this
     }
+
+    fun setFavouriteItems(favourites: List<FavouriteItem>) {
+        favoritesList = favourites
+        notifyDataSetChanged()
+    }
+
+    fun setCartItems(Items: List<CartProduct>) {
+        cartItems = Items
+        notifyDataSetChanged()
+    }
+
+
 
 }

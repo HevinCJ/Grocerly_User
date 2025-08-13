@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="searchProduct"
+            type="com.example.grocerly.model.Product" />
+
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        app:strokeWidth="2dp"
+        android:layout_marginTop="12dp"
+        app:strokeColor="@color/light_grey">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imgviewcartitem"
+                android:layout_width="100dp"
+                android:layout_height="0dp"
+                android:contentDescription="Image"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/fruitsvegetables" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="@+id/txtviewproductname"
+                app:layout_constraintTop_toBottomOf="@+id/txtviewproductname">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/star" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:fontFamily="@font/baloo_da_2_medium"
+                    app:setFormattedRating="@{searchProduct.itemRating}"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    tools:text="4.8" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:fontFamily="@font/baloo_da_2_medium"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    app:formattedTotalRating="@{searchProduct.totalRating}"
+                    tools:text="(115)" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtviewproductname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/custom_font"
+                android:maxLength="15"
+                android:textColor="@color/black"
+                android:textFontWeight="700"
+                android:textSize="20sp"
+                app:layout_constraintStart_toEndOf="@+id/imgviewcartitem"
+                app:layout_constraintTop_toTopOf="@+id/imgviewcartitem"
+                tools:text="TextView" />
+
+            <TextView
+                android:id="@+id/txtviewPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/custom_font"
+                android:maxLength="15"
+                android:textColor="@color/black"
+                android:textFontWeight="600"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/linearLayout3"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+                tools:text="125" />
+
+
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                app:layout_constraintBottom_toBottomOf="@+id/txtviewPrice"
+                app:layout_constraintStart_toEndOf="@+id/txtviewPrice"
+                app:layout_constraintTop_toTopOf="@+id/txtviewPrice"
+                app:srcCompat="@drawable/rupee_indian" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/addfavouritetocartbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/cartproduct_background"
+                android:clickable="true"
+                app:contentDescription="Add to cart"
+                android:src="@drawable/cart"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</layout>

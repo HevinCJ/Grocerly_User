@@ -1,5 +1,6 @@
 package com.example.grocerly.fragments
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,13 +10,19 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.grocerly.R
-import com.example.grocerly.activity.LoginActivity
+import com.example.grocerly.activity.MainActivity
 import com.example.grocerly.databinding.FragmentProfileBinding
+import com.example.grocerly.model.Account
+import com.example.grocerly.utils.LoadingDialogue
 import com.example.grocerly.utils.NetworkResult
 import com.example.grocerly.viewmodel.ProfileViewModel
+import com.google.android.play.integrity.internal.ac
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -24,6 +31,7 @@ class Profile : Fragment() {
     private val binding get() = profile!!
 
     private val profileViewModel:ProfileViewModel by viewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,15 +42,100 @@ class Profile : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        profileViewModel.fetchUserDetailsFromFirebase()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpLoginOutButton()
         observeLogoutState()
+        observeFetchingAccountDetails()
+        actionToEditProfile()
+        actionToSavedAddress()
+        actionToEditLanguage()
+        actionToSavedCards()
+        actionToOrders()
+    }
+
+    private fun actionToOrders() {
+        binding.apply {
+            ordersbtn.setOnClickListener {
+                findNavController().navigate(R.id.action_profile_to_orders,null, NavOptions.Builder().setLaunchSingleTop(true).setPopUpTo(R.id.profile,false).build())
+            }
+        }
+    }
+
+    private fun actionToSavedCards() {
+        binding.savedcardslayout.apply {
+            setOnClickListener {
+                findNavController().navigate(R.id.action_profile_to_savedCards,null, NavOptions.Builder().setLaunchSingleTop(true).setPopUpTo(R.id.profile,false).build())
+            }
+        }
+    }
+
+
+    private fun actionToEditLanguage() {
+        binding.apply {
+            editlanguagelayout.setOnClickListener {
+                findNavController().navigate(R.id.action_profile_to_editLanguage,null,NavOptions.Builder().setLaunchSingleTop(true).setPopUpTo(R.id.profile , false).build())
+            }
+        }
+    }
+
+    private fun actionToSavedAddress() {
+        binding.apply {
+            savedaddresslayout.setOnClickListener {
+                findNavController().navigate(R.id.action_profile_to_savedAddress,null, NavOptions.Builder().setLaunchSingleTop(true).setPopUpTo(R.id.profile,false).build())
+            }
+        }
+    }
+
+    private fun actionToEditProfile() {
+        binding.apply {
+            editProfilelayout.setOnClickListener {
+                findNavController().navigate(R.id.action_profile_to_editProfile)
+            }
+        }
+    }
+
+    private fun observeFetchingAccountDetails() {
+      viewLifecycleOwner.lifecycleScope.launch {
+          profileViewModel.accountDetails.collectLatest { account->
+              when(account){
+                  is NetworkResult.Error<*> -> {
+
+                  }
+                  is NetworkResult.Loading<*> -> {
+
+                  }
+                  is NetworkResult.Success<*> -> {
+                      account.data?.let {
+                          showAccountDetails(it)
+                      }
+                  }
+                  is NetworkResult.UnSpecified<*> -> {
+
+                  }
+              }
+          }
+      }
+    }
+
+    private fun showAccountDetails(account: Account) {
+       binding.apply {
+           Glide.with(requireContext()).load(account.imageUrl).placeholder(R.drawable.profileimg).into(imgiviewpicture)
+           txtviewusername.text = buildString {
+               append("Hello,")
+               append(account.firstName)}
+           txtviewemail.text = account.email
+       }
     }
 
     private fun observeLogoutState() {
-        lifecycleScope.launch {
-            profileViewModel.logoutstate.collect{result->
+        viewLifecycleOwner.lifecycleScope.launch {
+            profileViewModel.logoutState.collect{result->
                 when(result){
                     is NetworkResult.Error -> {
                         Toast.makeText(requireContext(),result.message, Toast.LENGTH_SHORT).show()
@@ -52,11 +145,13 @@ class Profile : Fragment() {
                     }
                     is NetworkResult.Success -> {
                         Toast.makeText(requireContext(),result.data,Toast.LENGTH_SHORT).show()
-                       val intent = Intent(requireActivity(),LoginActivity::class.java).apply {
-                           putExtra("skip_splash",true)
-                       }
-                        startActivity(intent)
-                        requireActivity().finish()
+                        lifecycleScope.launch {
+                            val intent = Intent(requireContext(), MainActivity::class.java).apply {
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            }
+                            startActivity(intent)
+                        }
+
                     }
                     is NetworkResult.UnSpecified -> {
 

@@ -3,6 +3,7 @@ package com.example.grocerly.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.grocerly.Repository.SignUpRepoImpl
 import com.example.grocerly.model.Account
 import com.example.grocerly.utils.Constants.ACCOUNTS
 import com.example.grocerly.utils.NetworkResult
@@ -26,7 +27,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 @HiltViewModel
-class SignUpViewmodel @Inject constructor(application: Application,private val auth: FirebaseAuth,private val db: FirebaseFirestore):AndroidViewModel(application) {
+class SignUpViewmodel @Inject constructor(application: Application,private val signUpRepoImpl: SignUpRepoImpl):AndroidViewModel(application) {
 
     private var _isSigned = MutableStateFlow<NetworkResult<FirebaseUser>>(NetworkResult.UnSpecified())
     val isSigned: Flow<NetworkResult<FirebaseUser>> get() = _isSigned
@@ -37,60 +38,35 @@ class SignUpViewmodel @Inject constructor(application: Application,private val a
 
     fun createUser(account: Account,password:String){
          viewModelScope.launch {
-             if (validationChecker(account.firstName, account.email, password)) {
+             if (validationChecker(account.firstName,account.lastName, account.email, password)) {
                  performUserSignUp(account, password)
              } else {
-                 emitValidationErrors(account.firstName, account.email, password)
+                 emitValidationErrors(account.firstName, account.lastName,account.email, password)
              }
          }
     }
 
     private suspend fun performUserSignUp(account: Account,password: String){
         _isSigned.value = NetworkResult.Loading()
-        try {
-            val firebaseResult = auth.createUserWithEmailAndPassword(account.email, password).await()
-            val firebaseUser = firebaseResult.user
-
-            val issaved = saveUserDetailsToFirebase(account)
-
-            if (firebaseUser!=null && issaved) {
-                _isSigned.value = NetworkResult.Success(firebaseUser)
-            } else {
-                _isSigned.value = NetworkResult.Error("User registration failed.")
-            }
-        } catch (e: Exception) {
-            _isSigned.value = NetworkResult.Error(e.message ?: "An unknown error occurred.")
-        }
+        val firebaseUser = signUpRepoImpl.performSignUpAndSaveUserDetails(account,password)
+        _isSigned.value = firebaseUser
     }
 
-    private suspend fun saveUserDetailsToFirebase(account: Account): Boolean {
-        val userId = auth.uid.toString()
 
-        return suspendCoroutine {continuation->
-            db.collection(ACCOUNTS)
-                .document(userId)
-                .set(account)
-                .addOnSuccessListener{
-                    continuation.resume(true)
-                }
-                .addOnFailureListener{
-                    continuation.resume(false)
-                }
-        }
-    }
 
-    private fun validationChecker(name:String,email: String, password: String): Boolean {
-        val isNameValidated = validateName(name)
+    private fun validationChecker(name:String,lastname:String,email: String, password: String): Boolean {
+        val isFirstNameValidated = validateName(name)
+        val isLastNameValidated = validateName(lastname)
         val isEmailValidated = validateEmail(email)
         val isPasswordValidated = validatePassword(password)
-        val isValidated = isNameValidated is RegisterValidation.Success && isEmailValidated is RegisterValidation.Success && isPasswordValidated is RegisterValidation.Success
+        val isValidated = isFirstNameValidated is RegisterValidation.Success && isLastNameValidated is RegisterValidation.Success && isEmailValidated is RegisterValidation.Success && isPasswordValidated is RegisterValidation.Success
         return isValidated
 
     }
 
-    private suspend fun emitValidationErrors(name: String, email: String, password: String) {
+    private suspend fun emitValidationErrors(name: String,lastname: String, email: String, password: String) {
         val state = RegisterFieldState(
-            validateName(name),validateEmail(email),validatePassword(password)
+            validateName(name),validateName(lastname),validateEmail(email),validatePassword(password)
         )
         _validationState.send(state)
     }

@@ -2,6 +2,7 @@ package com.example.grocerly.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,10 +15,11 @@ import androidx.navigation.fragment.findNavController
 import com.example.grocerly.R
 import com.example.grocerly.activity.MainActivity
 import com.example.grocerly.databinding.FragmentLoginBinding
+import com.example.grocerly.preferences.GrocerlyDataStore
 import com.example.grocerly.utils.NetworkResult
+import com.example.grocerly.utils.NetworkUtils
 import com.example.grocerly.utils.RegisterValidation
 import com.example.grocerly.viewmodel.LoginViewModel
-import com.example.grocerly.viewmodel.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -28,7 +30,6 @@ class Login : Fragment() {
     private val binding get() = login!!
 
     private val loginViewModel: LoginViewModel by viewModels()
-    private val sharedViewModel:SharedViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -85,6 +86,7 @@ class Login : Fragment() {
                       Toast.makeText(requireContext(),"Loading,Please wait...",Toast.LENGTH_SHORT).show()
                   }
                   is NetworkResult.Success -> {
+                      Log.d("issuccess",result.data.toString())
                     setPopUpToHomeFragment()
                   }
                 else -> {
@@ -99,22 +101,24 @@ class Login : Fragment() {
     private fun loginToFirebase() {
         binding.apply {
           loginbtn.setOnClickListener{
-              if (sharedViewModel.isNetworkAvailable(requireContext())){
+              if (NetworkUtils.isNetworkAvailable(requireContext())){
                   val email = edttxtemail.text.toString().trim()
                   val password = edttxtpassword.text.toString().trim()
                   loginViewModel.loginUserIntoFirebase(email,password)
               }else{
-                  Toast.makeText(requireContext(),"Please Enable Wifi/Data Connection",Toast.LENGTH_SHORT).show()
+                  Toast.makeText(requireContext(),"Enable Wifi or Mobile data",Toast.LENGTH_SHORT).show()
               }
           }
         }
     }
 
     private fun setPopUpToHomeFragment(){
-       val intent = Intent(requireActivity(), MainActivity::class.java)
-        startActivity(intent)
-            requireActivity().finish()
-
+       lifecycleScope.launch {
+           val intent = Intent(requireContext(), MainActivity::class.java).apply {
+               flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+           }
+           startActivity(intent)
+       }
     }
 
 }

@@ -1,12 +1,17 @@
+import org.gradle.internal.jvm.Jvm
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.jvm.JvmTargetValidationMode
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("androidx.navigation.safeargs.kotlin")
-    kotlin("plugin.serialization") version "2.0.21"
     id("kotlin-kapt")
     alias(libs.plugins.google.gms.google.services)
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -36,9 +41,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
+
+   tasks.withType<KotlinJvmCompile>().configureEach {
+       compilerOptions{
+          jvmTarget.set(JvmTarget.JVM_11)
+           freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
+       }
+   }
 
     buildFeatures{
         viewBinding = true
@@ -53,12 +62,14 @@ dependencies {
     //navigation
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)
+    implementation(libs.androidx.navigation.dynamic.features.fragment)
 
-    implementation(libs.androidx.core.splashscreen)
+
     //firebase
+
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.firestore)
-    implementation(libs.firebase.auth)
+    implementation(libs.google.firebase.dynamic.links)
+    implementation(libs.google.firebase.analytics)
 
     //livedata
 
@@ -71,8 +82,15 @@ dependencies {
 
         // Saved state module for ViewModel
         implementation(libs.androidx.lifecycle.viewmodel.savedstate)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.storage)
+    implementation(libs.appcompat)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.viewpager2)
 
-        // Annotation processor
+    // Annotation processor
         kapt(libs.androidx.lifecycle.compiler)
 
     //dagger and hilt
@@ -101,7 +119,23 @@ dependencies {
     implementation(libs.coil)
     implementation(libs.coil.network.okhttp)
 
+    //shimmer
+    implementation(libs.shimmer)
 
+    implementation(libs.ccp)
+
+    //gif
+    implementation(libs.android.gif.drawable)
+
+    //maps
+    implementation (libs.play.services.location)
+    implementation (libs.play.services.maps)
+
+    //gson
+    implementation(libs.gson)
+
+
+    implementation(libs.stagestepbar)
 
 
     implementation(libs.androidx.core.ktx)
