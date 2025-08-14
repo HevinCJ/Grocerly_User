@@ -27,7 +27,7 @@ import javax.inject.Inject
 
 
 @ActivityRetainedScoped
-open class OrderRepoImpl @Inject constructor(private val db: FirebaseFirestore, private val auth: FirebaseAuth) {
+  class OrderRepoImpl @Inject constructor(private val db: FirebaseFirestore, private val auth: FirebaseAuth) {
 
     private val userId = auth.currentUser?.uid.toString()
 
