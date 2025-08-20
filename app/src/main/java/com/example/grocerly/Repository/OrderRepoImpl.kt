@@ -108,7 +108,7 @@ import javax.inject.Inject
 
 
             val updatedItems = fullOrder.items.map {
-                if (it.product.partnerId == cartProduct.product.partnerId &&  it.cancellationInfo.cancellationStatus != CancellationStatus.Cancelled) {
+                if (it.product.partnerId == cartProduct.product.partnerId && it.product.productId == cartProduct.product.productId && it.cancellationInfo.cancellationStatus != CancellationStatus.Cancelled) {
                    if (status == OrderStatus.DELIVERED){
                        it.copy(orderStatus = status, deliveredDate = System.currentTimeMillis())
                    }else{
