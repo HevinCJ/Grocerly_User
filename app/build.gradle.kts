@@ -89,6 +89,7 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.viewpager2)
+    implementation(libs.firebase.functions)
 
     // Annotation processor
         kapt(libs.androidx.lifecycle.compiler)

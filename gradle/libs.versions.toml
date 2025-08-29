@@ -38,6 +38,7 @@ appcompatVersion = "1.7.1"
 recyclerview = "1.4.0"
 stagestepbar = "1.2.0"
 viewpager2 = "1.1.0"
+firebaseFunctions = "22.0.0"
 
 [libraries]
 android-gif-drawable = { module = "pl.droidsonroids.gif:android-gif-drawable", version.ref = "androidGifDrawable" }
@@ -92,6 +93,7 @@ appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "a
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 stagestepbar = { module = "com.github.loukwn.StageStepBar:stagestepbar", version.ref = "stagestepbar" }
 androidx-viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewpager2" }
+firebase-functions = { group = "com.google.firebase", name = "firebase-functions", version.ref = "firebaseFunctions" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

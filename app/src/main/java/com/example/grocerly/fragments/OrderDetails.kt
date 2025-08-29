@@ -78,6 +78,8 @@ class OrderDetails : Fragment() {
         observeOrderStatus()
     }
 
+
+
     private fun observeOrderStatus() {
        viewLifecycleOwner.lifecycleScope.launch {
            ordersViewModel.orderStatus.collectLatest {
@@ -105,6 +107,7 @@ class OrderDetails : Fragment() {
     override fun onResume() {
         super.onResume()
         ordersViewModel.fetchFavourites()
+        ordersViewModel.fetchOrderStatus(cartProduct,order)
     }
 
     private fun observeCategoryItems() {
@@ -257,7 +260,7 @@ class OrderDetails : Fragment() {
             }
             OrderStatus.SHIPPED -> {
                 binding.apply {
-                    stageStepBar.setCurrentState(State(1,0))
+                    stageStepBar.setCurrentState(State(1,1))
                     cancelButton.visibility =  if (cartProduct.orderStatus == OrderStatus.SHIPPED) View.GONE else View.VISIBLE
                     txtviewdeliveryupdate.text = "The Item has been shipped"
                 }

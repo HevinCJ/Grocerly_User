@@ -8,6 +8,7 @@ import kotlinx.parcelize.Parcelize
 data class CartProduct(
     val product: Product = Product(),
     var quantity:Int = 1,
+    val orderedTime: Long = 0L,
     val deliveryDate: String = "",
     var deliveredDate: Long = 0L,
     val orderStatus: OrderStatus = OrderStatus.PENDING,

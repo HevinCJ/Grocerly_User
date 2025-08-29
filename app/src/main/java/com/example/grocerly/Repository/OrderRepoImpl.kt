@@ -62,7 +62,7 @@ import javax.inject.Inject
 
 
     fun getOrderStatus(cartProduct: CartProduct,order: Order): Flow<NetworkResult<CartProduct>> = callbackFlow {
-      val listener =   orderRef.document(order.orderId).addSnapshotListener { snapshot,exception->
+      val listener =  orderRef.document(order.orderId).addSnapshotListener { snapshot,exception->
 
           if (exception!=null){
               trySend(NetworkResult.Error(exception.toString()))
@@ -194,9 +194,10 @@ import javax.inject.Inject
         return mapOf(
             "product" to product,
             "quantity" to quantity,
+            "orderedTime" to orderedTime,
             "deliveryDate" to deliveryDate,
             "deliveredDate" to deliveredDate,
-            "orderStatus" to orderStatus,
+            "orderStatus" to  orderStatus,
             "cancellationInfo" to cancellationInfo.toMap()
         )
     }

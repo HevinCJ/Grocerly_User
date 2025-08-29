@@ -62,10 +62,7 @@
 
                 if (existingProduct?.product?.productId == cartProduct.product.productId) {
 
-
-
-                    val newQuantity = existingProduct.quantity + 1
-                    val newProduct = existingProduct.copy(quantity = newQuantity, deliveryDate = getFutureDateString(2,"dd MMMM, E"))
+                    val newProduct = existingProduct.copy(deliveryDate = getFutureDateString(2,"dd MMMM, E"))
                     if (newProduct.quantity<=10){
                         cartRef.document(existingProduct.product.productId).update(newProduct.toHashMap()).await()
                         NetworkResult.Success(Unit)

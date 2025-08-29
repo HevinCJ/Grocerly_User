@@ -63,10 +63,13 @@ class PaymentRepoImpl @Inject constructor( private val auth: FirebaseAuth,privat
 
 
 
+
+
     suspend fun sendOrderToUserAndSeller(paymentType:String,order: Order): NetworkResult<Unit>{
         return try {
 
-            val updatedOrder = order.copy(paymentType = paymentType, userId = userId)
+            val updatedItems = order.items.map { it.copy(orderedTime = System.currentTimeMillis()) }
+            val updatedOrder = order.copy(paymentType = paymentType, userId = userId, items = updatedItems, timestamp = System.currentTimeMillis())
 
             val batch = db.batch()
 
@@ -80,15 +83,15 @@ class PaymentRepoImpl @Inject constructor( private val auth: FirebaseAuth,privat
             batch.set(userOrderRef, updatedOrder)
 
 
-            val itemsGroupedBySeller = order.items.groupBy { it.product.partnerId }
+            val itemsGroupedBySeller = updatedOrder.items.groupBy { it.product.partnerId }
 
             itemsGroupedBySeller.forEach {(sellerId,sellerItems) ->
-               val order = updatedOrder.copy(items = sellerItems)
+               val sellerOrder = updatedOrder.copy(items = sellerItems)
                 val sellerOrderRef = db.collection(PARTNERS)
                     .document(sellerId)
                     .collection(ORDERS)
                     .document(order.orderId)
-                batch.set(sellerOrderRef, order)
+                batch.set(sellerOrderRef, sellerOrder)
 
             }
 

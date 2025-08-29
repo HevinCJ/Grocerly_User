@@ -178,7 +178,7 @@
                         app:ssb_filledTrackColor="@color/green"
                         app:ssb_orientation="horizontal"
                         app:ssb_showThumbs="true"
-                        app:ssb_stageStepConfig="3,1,2"
+                        app:ssb_stageStepConfig="3,2,2"
                         app:ssb_thumbSize="14dp"
                         app:ssb_unfilledThumbColor="@color/grey"
                         app:ssb_unfilledThumbDrawable="@drawable/checked"
